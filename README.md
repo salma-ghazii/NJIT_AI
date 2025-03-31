@@ -12,7 +12,7 @@ This application is designed to handle queries using a language model and a vect
 1. **Clone the repository**:
 ```bash
 $ git clone https://github.com/your-repo/local-rag.git
-$ cd local-rag
+$ cd NJIT_AI
 ```
 
 2. **Create a virtual environment**:
