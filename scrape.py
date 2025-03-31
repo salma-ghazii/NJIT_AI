@@ -29,9 +29,9 @@
 #     pdf_filename = "njit_cs_data.pdf"
 #     pdf.output(pdf_filename)
 
-#     print(f"✅ NJIT CS data saved to {pdf_filename}")
+#     print(f"NJIT CS data saved to {pdf_filename}")
 # else:
-#     print(f"❌ Failed to fetch the page. Status code: {response.status_code}")
+#     print(f"Failed to fetch the page. Status code: {response.status_code}")
 
 
 import requests
@@ -69,7 +69,7 @@ def scrape_page(url, base_url):
         return text_content, sub_links
 
     except requests.RequestException as e:
-        print(f"❌ Error scraping {url}: {e}")
+        print(f"Error scraping {url}: {e}")
         return "", []
 
 def scrape_website(start_url, max_pages=10):
@@ -77,16 +77,19 @@ def scrape_website(start_url, max_pages=10):
     base_url = start_url
     pages_to_scrape = {start_url}
     all_text = ""
+    # visited_urls = set()
 
     while pages_to_scrape and len(visited_urls) < max_pages:
         current_page = pages_to_scrape.pop()
-        print(f"🔍 Scraping: {current_page}")
+        print(f"Scraping: {current_page}")
 
         page_text, sub_links = scrape_page(current_page, base_url)
         all_text += f"\n\n---\n\nPage: {current_page}\n\n{page_text}"
 
         # Add new sub-links to scrape
-        pages_to_scrape.update(sub_links - visited_urls)
+        # print(type(sub_links))
+        # print(type(visited_urls))
+        pages_to_scrape.update(set(sub_links) - visited_urls)
 
     return all_text
 
@@ -112,12 +115,18 @@ def save_to_pdf(text, filename="scraped_data.pdf"):
         y_position -= line_height
 
     pdf.save()
-    print(f"✅ Data saved to {filename}")
+    print(f"Data saved to {filename}")
 
 # Set your starting URL (e.g., NJIT CS website)
 start_url = "https://cs.njit.edu/"
 
 # Scrape website and generate PDF
-scraped_text = scrape_website(start_url, max_pages=20)
-save_to_pdf(scraped_text, "njit_cs_full_data.pdf")
+# scraped_text = scrape_website(start_url, max_pages=50)
+# save_to_pdf(scraped_text, "njit_cs_full_data.pdf")
+
+start_url = "https://www.njit.edu/"
+scraped_text = scrape_website(start_url, max_pages=50)
+save_to_pdf(scraped_text, "njit_general_full_data.pdf")
+
+
 
