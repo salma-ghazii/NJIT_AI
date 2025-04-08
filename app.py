@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from embed import embed
 from query import query
 from get_vector_db import get_vector_db
@@ -11,7 +11,13 @@ from get_vector_db import get_vector_db
 TEMP_FOLDER = os.getenv('TEMP_FOLDER', './_temp')
 os.makedirs(TEMP_FOLDER, exist_ok=True)
 
-app = Flask(__name__)
+# app = Flask(__name__)
+
+app = Flask(__name__, static_folder='static')
+
+@app.route('/')
+def serve_frontend():
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/embed', methods=['POST'])
 def route_embed():
@@ -19,6 +25,8 @@ def route_embed():
         return jsonify({"error": "No file part"}), 400
 
     file = request.files['file']
+
+    # print(file)
 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400

@@ -125,7 +125,7 @@ start_url = "https://cs.njit.edu/"
 # save_to_pdf(scraped_text, "njit_cs_full_data.pdf")
 
 start_url = "https://www.njit.edu/"
-scraped_text = scrape_website(start_url, max_pages=100)
+scraped_text = scrape_website(start_url, max_pages=20)
 save_to_pdf(scraped_text, "njit_general_full_data.pdf")
 
 

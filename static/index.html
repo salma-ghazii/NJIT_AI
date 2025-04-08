@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Embed & Query</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      max-width: 600px;
+    }
+    input, textarea, button {
+      display: block;
+      margin: 1rem 0;
+      width: 100%;
+      padding: 0.5rem;
+    }
+    .response {
+      background: #f0f0f0;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📄 Upload PDF to Embed</h2>
+  <input type="file" id="pdfFile" accept=".pdf" />
+  <button onclick="uploadFile()">Upload</button>
+  <div id="uploadStatus" class="response"></div>
+
+  <h2>❓ Ask a Question</h2>
+  <textarea id="question" rows="4" placeholder="Enter your question..."></textarea>
+  <button onclick="askQuestion()">Ask</button>
+  <div id="answer" class="response"></div>
+
+  <h2>🗑️ Delete Collection</h2>
+  <button onclick="deleteCollection()">Delete Vector DB</button>
+  <div id="deleteStatus" class="response"></div>
+
+  <script>
+    async function uploadFile() {
+      const fileInput = document.getElementById('pdfFile');
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/embed', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      document.getElementById('uploadStatus').innerText = data.message || data.error;
+    }
+
+    async function askQuestion() {
+      const question = document.getElementById('question').value;
+
+      const res = await fetch('/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: question })
+      });
+
+      const data = await res.json();
+      document.getElementById('answer').innerText = data.message || data.error;
+    }
+
+    async function deleteCollection() {
+      const res = await fetch('/delete', {
+        method: 'DELETE'
+      });
+
+      const data = await res.json();
+      document.getElementById('deleteStatus').innerText = data.message || data.error;
+    }
+  </script>
+</body>
+</html>

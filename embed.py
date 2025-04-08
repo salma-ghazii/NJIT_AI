@@ -36,6 +36,7 @@ def load_and_split_data(file_path):
 # Main function to handle the embedding process
 def embed(file):
     # Check if the file is valid, save it, load and split the data, add to the database, and remove the temporary file
+    # print(file.filename)
     if file.filename != '' and file and allowed_file(file.filename):
         file_path = save_file(file)
         chunks = load_and_split_data(file_path)
