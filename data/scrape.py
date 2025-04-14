@@ -124,9 +124,9 @@ start_url = "https://cs.njit.edu/"
 # scraped_text = scrape_website(start_url, max_pages=50)
 # save_to_pdf(scraped_text, "njit_cs_full_data.pdf")
 
-start_url = "https://www.njit.edu/"
+start_url = "https://www.njit.edu/admissions/tuition-costs/"
 scraped_text = scrape_website(start_url, max_pages=100)
-save_to_pdf(scraped_text, "njit_general_full_data.pdf")
+save_to_pdf(scraped_text, "njit_tuition_data.pdf")
 
 
 
