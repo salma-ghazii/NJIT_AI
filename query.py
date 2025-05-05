@@ -15,6 +15,8 @@ def get_prompt():
         template="""You are an AI language model assistant. Your task is to generate five
         different versions of the given user question to retrieve relevant documents from
         a vector database. Make sure to not use outside infromation not in the documents and if you do not use other websites or sources. 
+        Make sure the information you are giving makes sense and under no circumstances should you make up any information!
+        Imagine you are a general student asking the question and use information that makes the most sense to answer their query. 
         By generating multiple perspectives on the user question, your
         goal is to help the user overcome some of the limitations of the distance-based
         similarity search. Provide these alternative questions separated by newlines.

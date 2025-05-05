@@ -1,61 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Embed & Query</title>
+  <meta charset="UTF-8" />
+  <title>NJIT AI Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --njit-red: #cc0000;
+      --njit-red-dark: #a00000;
+      --bg-gradient: linear-gradient(to right, #f5f5f5, #ffffff);
+      --text-color: #1f2937;
+      --gray: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      max-width: 600px;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
     }
-    input, textarea, button {
-      display: block;
-      margin: 1rem 0;
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--njit-red);
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 1rem;
+      margin-top: 0.3rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
       width: 100%;
-      padding: 0.5rem;
+      max-width: 650px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
-    .response {
-      background: #f0f0f0;
+
+    h2 {
+      margin-bottom: 1rem;
+      color: var(--njit-red);
+      font-size: 1.4rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
       padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--gray);
+      border-radius: 10px;
       margin-top: 1rem;
-      border-radius: 5px;
+      resize: vertical;
+      background: #f9fafb;
+    }
+
+    button {
+      background-color: var(--njit-red);
+      color: white;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+      width: 100%;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: var(--njit-red-dark);
+      transform: translateY(-1px);
+    }
+
+    .response {
+      background-color: #f3f4f6;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+      border-left: 5px solid var(--njit-red);
+      white-space: pre-wrap;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #888;
     }
   </style>
 </head>
 <body>
-  <h2>Upload PDF to Embed</h2>
-  <input type="file" id="pdfFile" accept=".pdf" />
-  <button onclick="uploadFile()">Upload</button>
-  <div id="uploadStatus" class="response"></div>
+  <header>
+    <div class="logo">NJIT AI Assistant </div>
+    <div class="subtitle">Ask questions about NJIT courses, events, facilities and more </div>
+  </header>
 
-  <h2>Ask a Question</h2>
-  <textarea id="question" rows="4" placeholder="Enter your question..."></textarea>
-  <button onclick="askQuestion()">Ask</button>
-  <div id="answer" class="response"></div>
+  <div class="card">
+    <h2>Ask a Question</h2>
+    <textarea id="question" placeholder="e.g., What clubs are offered on campus?"></textarea>
+    <button onclick="askQuestion()">Ask Question</button>
+    <div id="answer" class="response" style="display: none;"></div>
+  </div>
 
-  <h2>🗑️ Delete Collection</h2>
-  <button onclick="deleteCollection()">Delete Vector DB</button>
-  <div id="deleteStatus" class="response"></div>
+  <!-- <footer>© 2025 New Jersey Institute of Technology · AI-PDF System</footer> -->
 
   <script>
-    async function uploadFile() {
-      const fileInput = document.getElementById('pdfFile');
-      const file = fileInput.files[0];
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await fetch('/embed', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await res.json();
-      document.getElementById('uploadStatus').innerText = data.message || data.error;
-    }
-
     async function askQuestion() {
       const question = document.getElementById('question').value;
+      const responseDiv = document.getElementById('answer');
+      responseDiv.style.display = 'block';
+      responseDiv.innerText = 'Thinking...';
 
       const res = await fetch('/query', {
         method: 'POST',
@@ -64,16 +139,7 @@
       });
 
       const data = await res.json();
-      document.getElementById('answer').innerText = data.message || data.error;
-    }
-
-    async function deleteCollection() {
-      const res = await fetch('/delete', {
-        method: 'DELETE'
-      });
-
-      const data = await res.json();
-      document.getElementById('deleteStatus').innerText = data.message || data.error;
+      responseDiv.innerText = data.message || data.error || 'No response.';
     }
   </script>
 </body>
